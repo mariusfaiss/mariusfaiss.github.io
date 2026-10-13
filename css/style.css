@@ -1,0 +1,645 @@
+/* ==========================================================================
+   Paper
+   The whole page is paper. Each section is a full-width sheet lying slightly
+   over the one before it; sheets differ in tone and age:
+     --white     fresh printer paper
+     --offwhite  uncoated, slightly warmer stock
+     --cream     heavier, creamy stock
+     --aged      older paper with mottling
+   Each paper type has its own subtle texture (img/paper-<type>.jpg, made by
+   tools/make_texture.py): nearly white greyscale, multiplied onto the colour.
+   ========================================================================== */
+
+:root {
+  /* Paper tones */
+  --white: #faf7f0;
+  --offwhite: #f4eee2;
+  --cream: #efe6d1;
+  --aged: #e9ddc1;
+  --card: #e9dfca;   /* light cardboard, for the top bar */
+  --photo: #fdfdfb;
+
+  /* Ink */
+  --ink: #2b2925;
+  --ink-soft: #5e5950;
+  --ink-faint: #8d867a;
+  --accent: #8a3b2a; /* dried-ink red, used sparingly */
+
+  /* Fonts */
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+
+  /* Content width inside full-width sheets */
+  --measure: 880px;
+  --gutter: max(22px, calc((100% - var(--measure)) / 2));
+
+  --masthead-h: 88px;
+
+  /* Shadow a sheet casts upwards onto the sheet beneath it */
+  --edge-shadow:
+    0 -1px 0 rgba(70, 52, 28, 0.07),
+    0 -10px 22px -16px rgba(40, 28, 12, 0.4);
+  --shadow:
+    0 1px 1px rgba(20, 16, 10, 0.12),
+    0 4px 8px -2px rgba(20, 16, 10, 0.16),
+    0 14px 28px -10px rgba(20, 16, 10, 0.3);
+  --shadow-lifted:
+    0 2px 2px rgba(20, 16, 10, 0.1),
+    0 10px 18px -4px rgba(20, 16, 10, 0.2),
+    0 28px 46px -16px rgba(20, 16, 10, 0.4);
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; background: var(--offwhite); }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+a:hover { color: var(--accent); }
+
+img { max-width: 100%; display: block; }
+
+/* Keep the footer at the bottom of short pages */
+main { display: flex; flex-direction: column; min-height: 100vh; }
+.sheet--footer { margin-top: auto; }
+
+/* --------------------------------------------------------------------------
+   Paper surfaces
+   -------------------------------------------------------------------------- */
+
+.paper, body, .masthead {
+  --tone: var(--offwhite);
+  --texture: url("../img/paper-offwhite.jpg");
+  position: relative;
+  background-color: var(--tone);
+  background-image: var(--texture);
+  background-size: 384px 384px;
+  background-blend-mode: multiply;
+}
+
+.paper--white    { --tone: var(--white);    --texture: url("../img/paper-white.jpg"); }
+.paper--offwhite { --tone: var(--offwhite); --texture: url("../img/paper-offwhite.jpg"); }
+.paper--cream    { --tone: var(--cream);    --texture: url("../img/paper-cream.jpg"); }
+.paper--aged     { --tone: var(--aged);     --texture: url("../img/paper-aged.jpg"); }
+.masthead        { --tone: var(--card);     --texture: url("../img/paper-card.jpg"); }
+
+/* --------------------------------------------------------------------------
+   Sheets: full-width, each lying on top of the previous one
+   -------------------------------------------------------------------------- */
+
+.masthead,
+.sheet {
+  padding-inline: var(--gutter);
+  box-shadow: var(--edge-shadow);
+}
+
+/* The name and menu stay at the top while scrolling (not inside an open photo
+   set, which has its own bar) */
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  /* a soft edge, like the sheets below; a little deeper once scrolled */
+  box-shadow: 0 1px 0 rgba(70, 52, 28, 0.06), 0 8px 16px -14px rgba(40, 28, 12, 0.35);
+  transition: box-shadow 0.25s ease;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 32px;
+  padding-block: 30px 26px;
+}
+.masthead.is-stuck { box-shadow: 0 10px 20px -16px rgba(40, 28, 12, 0.45), 0 1px 0 rgba(70, 52, 28, 0.06); }
+body.viewing-set .masthead { position: relative; box-shadow: none; }
+section[id] { scroll-margin-top: var(--masthead-h); }
+.masthead h1 {
+  margin: 0;
+  font-weight: 500;
+  font-size: 1.9rem;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+.masthead h1 a { text-decoration: none; }
+.masthead nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 22px;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+.masthead nav a { text-decoration: none; color: var(--ink-soft); }
+.masthead nav a:hover,
+.masthead nav a[aria-current="page"] { color: var(--accent); }
+
+.sheet { padding-block: clamp(36px, 6vw, 64px); }
+.sheet--footer { padding-block: 40px 56px; }
+
+/* Typography inside sheets */
+.label {
+  display: block;
+  margin: 0 0 1.4em;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.sheet h2 {
+  margin: 0 0 0.6em;
+  font-size: 2.1rem;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.sheet h3 {
+  margin: 2em 0 0.8em;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid rgba(43, 41, 37, 0.15);
+}
+.sheet .label + h3 { margin-top: 0; }
+.sheet h2 + h3 { margin-top: 0.4em; }
+.sheet p { margin: 0 0 1em; max-width: 62ch; }
+.lede { font-size: 1.3rem; line-height: 1.5; }
+
+.interests {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  margin: 1.4em 0 0;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+.interests li {
+  padding: 3px 10px;
+  border: 1px solid rgba(43, 41, 37, 0.25);
+  border-radius: 2px;
+  color: var(--ink-soft);
+}
+
+/* About: text with two prints of me lying on the sheet */
+.about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 250px;
+  gap: 56px;
+  align-items: start;
+}
+.about-text h2 { margin-top: 0; }
+.about-prints { padding-top: 8px; }
+.print--me { padding: 10px 10px 0; }
+.print--me:first-child { transform: rotate(2.2deg); }
+.print--me:first-child .frame { aspect-ratio: 4 / 5; }
+.about-prints .print--me:first-child img { height: 100%; object-fit: cover; object-position: 41% 40%; }
+.print--me:last-child { margin-top: -26px; transform: rotate(-3deg) translateX(-24px); position: relative; }
+.print--me:last-child .frame { aspect-ratio: 4 / 3; }
+.print--me:not(:has(figcaption)) { padding-bottom: 10px; }
+
+/* Prints lying on the CV between Education and Experience: side by side,
+   sized by their proportions (--r) so they share the same height */
+.cv-prints {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  max-width: 610px;
+  margin: 2.6em 0 0.4em calc(9.5rem + 24px);
+}
+.sheet .print--cv {
+  flex: var(--r) 1 0;
+  min-width: 0;
+  padding: 12px 12px 0;
+  transform: rotate(-1.2deg);
+}
+/* The second print lies slightly over the first, like the prints in About */
+.sheet .print--cv + .print--cv { margin-left: -26px; transform: rotate(2.4deg) translateY(16px); position: relative; }
+.print--cv .frame img { width: 100%; height: auto; }
+.sheet .print--cv:hover { transform: rotate(0deg) translateY(-4px); box-shadow: var(--shadow-lifted); }
+.print--cv figcaption a { color: inherit; }
+.print--cv figcaption a:hover { color: var(--accent); }
+
+/* CV entries */
+.entries { list-style: none; padding: 0; margin: 0; }
+.entries li {
+  display: grid;
+  grid-template-columns: 9.5rem 1fr;
+  gap: 4px 24px;
+  padding: 0.7em 0;
+}
+.entries .when {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  padding-top: 0.3em;
+}
+.entries .what strong { font-weight: 600; }
+.entries .what span { display: block; color: var(--ink-soft); font-size: 1rem; }
+.entries .what { grid-column: 2; grid-row: 1 / span 2; }
+
+/* Institution logos, printed in ink: the logo file is used as a mask, so
+   whatever its colours, it shows as one ink tone on the paper.
+   (The --logo url in index.html is relative to this stylesheet's folder.) */
+/* Logos flow left to right and wrap, so a wide one sits alone on top and
+   smaller ones share a row. Each logo can set its own size with --w / --h. */
+.cv-logos {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px 12px;
+  max-width: 9.5rem;
+  margin-top: 10px;
+  align-self: start;
+}
+.cv-logo {
+  display: block;
+  width: var(--w, 92px);
+  height: var(--h, 24px);
+  background-color: var(--ink-faint);
+  -webkit-mask: var(--logo) left top / contain no-repeat;
+  mask: var(--logo) left top / contain no-repeat;
+  opacity: 0.75;
+}
+.cv-logo--text {
+  width: auto;
+  height: auto;
+  background: none;
+  -webkit-mask: none;
+  mask: none;
+  font: 700 0.78rem/1.2 "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: -0.01em;
+  color: var(--ink-faint);
+}
+a.cv-logo--text { text-decoration: none; }
+a.cv-logo--text:hover { color: var(--accent); }
+
+/* Publications: each entry with a small print of its title page */
+.pubs { list-style: none; padding: 0; margin: 0; }
+.pubs li {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr);
+  grid-auto-rows: min-content;
+  column-gap: 26px;
+  padding: 1.2em 0;
+  border-top: 1px dashed rgba(43, 41, 37, 0.2);
+}
+.pubs li:first-child { border-top: 0; }
+.pubs li > span { grid-column: 2; }
+.pub-thumb {
+  grid-column: 1;
+  grid-row: 1 / span 5;
+  align-self: start;
+  display: block;
+  margin-top: 4px;
+  background: #fff;
+  box-shadow: 0 1px 1px rgba(20, 16, 10, 0.12), 0 3px 8px -2px rgba(20, 16, 10, 0.2);
+  transform: rotate(-1.2deg);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.pubs li:nth-child(even) .pub-thumb { transform: rotate(1deg); }
+.pubs li .pub-thumb:hover { transform: rotate(0deg) translateY(-3px); box-shadow: var(--shadow-lifted); }
+.pub-thumb img { width: 100%; height: auto; }
+.pubs .title { display: block; font-weight: 600; line-height: 1.35; }
+.pubs .authors { display: block; color: var(--ink-soft); font-size: 1rem; }
+.pubs .venue { display: block; font-style: italic; font-size: 1rem; }
+.pubs .links { display: flex; gap: 14px; margin-top: 0.3em; font-family: var(--mono); font-size: 0.75rem; }
+
+/* Footer */
+.sheet--footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+.sheet--footer p { margin: 0; }
+.sheet--footer .license {
+  flex: 0 0 100%;
+  max-width: none; /* the general 62ch text width would let it sit beside the icons */
+  margin-top: 14px;
+  font-size: 0.7rem;
+  line-height: 1.6;
+  color: var(--ink-faint);
+}
+
+/* Contact icons: printed in ink, red on hover */
+.icon-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 1.6em 0 0 -9px;
+  padding: 0;
+  list-style: none;
+}
+.icon-links a {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: var(--ink-soft);
+  border-radius: 50%;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+.icon-links a:hover { color: var(--accent); background-color: rgba(43, 41, 37, 0.06); }
+.icon-links svg { width: 21px; height: 21px; }
+.sheet--footer .icon-links { margin: 0 -9px 0 0; }
+
+/* --------------------------------------------------------------------------
+   Prints (photo paper: smooth, white border, no fibres)
+   -------------------------------------------------------------------------- */
+
+.print {
+  margin: 0;
+  padding: 14px 14px 0;
+  background: var(--photo);
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.6), transparent 40%, rgba(0, 0, 0, 0.02));
+  box-shadow: var(--shadow);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.about-prints .print:hover,
+.prints .print:hover {
+  box-shadow: var(--shadow-lifted);
+  position: relative;
+  z-index: 2;
+}
+.about-prints .print:hover { transform: rotate(0deg) translateY(-4px); }
+.print .frame { display: block; background: #2b2925; overflow: hidden; }
+.print .frame img { width: 100%; height: auto; }
+.print figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 12px;
+  padding: 10px 2px 12px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+}
+
+/* --------------------------------------------------------------------------
+   Photography page
+   -------------------------------------------------------------------------- */
+
+
+/* Overview: one stack of prints per set */
+.stacks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 56px 48px;
+  padding-block: 56px 96px;
+  box-shadow: none;
+}
+.stack {
+  display: block;
+  /* larger hover area, so the fanned-out prints stay inside it */
+  padding: 16px 28px;
+  margin: -16px -28px;
+  text-decoration: none;
+  color: inherit;
+}
+.stack-pile {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  margin: 14px 14px 22px;
+}
+.stack-pile .print {
+  position: absolute;
+  inset: 0;
+  padding: 9px;
+  transition: transform 0.45s cubic-bezier(.2, .8, .2, 1), box-shadow 0.45s ease;
+}
+.stack-pile .print img { width: 100%; height: 100%; object-fit: cover; background: #2b2925; }
+.stack-pile .print:nth-child(1) { transform: rotate(-5deg) translate(-4px, 2px); }
+.stack-pile .print:nth-child(2) { transform: rotate(3.5deg) translate(3px, -2px); }
+.stack-pile .print:nth-child(3) { transform: rotate(-0.8deg); }
+.stack:hover .stack-pile .print:nth-child(1),
+.stack:focus-visible .stack-pile .print:nth-child(1) { transform: rotate(-11deg) translate(-26px, 4px); }
+.stack:hover .stack-pile .print:nth-child(2),
+.stack:focus-visible .stack-pile .print:nth-child(2) { transform: rotate(9deg) translate(24px, -8px); }
+.stack:hover .stack-pile .print:nth-child(3),
+.stack:focus-visible .stack-pile .print:nth-child(3) { transform: rotate(0deg) translateY(-6px); box-shadow: var(--shadow-lifted); }
+.stack-pile .print { pointer-events: none; } /* the stack reacts as one, never a single print */
+.stack-title {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  width: fit-content;
+}
+.stack-count { display: block; margin-top: 2px; font-family: var(--mono); font-size: 0.72rem; color: var(--ink-faint); }
+.stack:hover .stack-title { color: var(--accent); }
+
+/* Set view: each set is a sheet; its title bar sticks to the top while you
+   scroll through it and is pushed away by the next set's bar */
+.photo-set { box-shadow: var(--edge-shadow); }
+.set-body { padding: 0 var(--gutter) 96px; }
+.set-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: baseline;
+  gap: 8px 16px;
+  padding: 18px var(--gutter);
+  background-color: var(--tone);
+  box-shadow: 0 10px 18px -16px rgba(40, 28, 12, 0.5);
+}
+.set-bar h2 { margin: 0; font-size: 1rem; }
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  cursor: pointer;
+}
+.back svg { width: 18px; height: 18px; transition: transform 0.2s ease; }
+.back:hover { color: var(--accent); }
+.back:hover svg { transform: translateX(-3px); }
+.set-count { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-faint); margin-left: auto; }
+.set-about { margin: 28px 0 0; max-width: 56ch; color: var(--ink-soft); }
+
+[hidden] { display: none !important; }
+
+/* Justified rows: each print grows in proportion to its aspect ratio (--r),
+   so portraits, landscapes and panoramas share a row at equal height */
+.prints {
+  --row: 190px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px 34px;
+  margin-top: 40px;
+}
+.prints::after { content: ""; flex: 999 1 0; } /* keeps the last row from stretching */
+.prints .print {
+  --r: 1.5;
+  flex: var(--r) 1 calc(var(--r) * var(--row));
+  max-width: calc(var(--r) * var(--row) * 1.6);
+}
+.prints .print:nth-child(4n+1) { transform: rotate(-1.2deg); }
+.prints .print:nth-child(4n+2) { transform: rotate(0.8deg) translateY(10px); }
+.prints .print:nth-child(4n+3) { transform: rotate(-0.4deg); }
+.prints .print:nth-child(4n)   { transform: rotate(1.4deg) translateX(6px); }
+.prints .print:hover { transform: rotate(0deg) translateY(-4px); }
+.prints .frame { cursor: zoom-in; }
+
+/* Title travels from the stack to the bar (browsers with view transitions) */
+::view-transition-group(set-title) { animation-duration: 0.45s; animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.3s; }
+
+/* --------------------------------------------------------------------------
+   Lightbox
+   -------------------------------------------------------------------------- */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) 72px;
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-items: center;
+  background: rgba(30, 28, 25, 0.94);
+  color: #e9e4da;
+  animation: lb-in 0.2s ease;
+}
+@keyframes lb-in { from { opacity: 0; } }
+.lb-stage {
+  grid-column: 2;
+  grid-row: 1;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  padding: 32px 0 12px;
+  min-height: 0;
+}
+.lb-print {
+  margin: 0;
+  padding: 14px 14px 0;
+  background: var(--photo);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.lb-print img {
+  max-width: min(100%, calc(100vw - 172px));
+  max-height: calc(100vh - 150px);
+  max-height: calc(100dvh - 150px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+/* Same caption as on the prints in the set view, on the white bottom margin */
+.lb-print figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 16px;
+  padding: 11px 2px 13px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+  width: 0;
+  min-width: 100%; /* as wide as the photo, never wider */
+}
+.lb-count {
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: center;
+  padding: 0 0 20px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: #b9b2a4;
+}
+.lightbox button {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: #e9e4da;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.lightbox button:hover { background: rgba(255, 255, 255, 0.1); }
+.lightbox button svg { width: 26px; height: 26px; }
+.lb-prev { grid-column: 1; grid-row: 1; justify-self: center; }
+.lb-next { grid-column: 3; grid-row: 1; justify-self: center; }
+.lb-close { position: absolute; top: 14px; right: 14px; }
+
+/* --------------------------------------------------------------------------
+   Small screens and motion preferences
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  body { font-size: 1.05rem; }
+  :root { --gutter: 18px; }
+  :root { --masthead-h: 76px; }
+  .masthead { padding-block: 14px 12px; gap: 4px 16px; }
+  .masthead h1 { font-size: 1.35rem; }
+  .masthead nav { gap: 2px 14px; font-size: 0.74rem; }
+  .entries li { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .cv-prints { margin-left: 0; }
+  .sheet .print--cv + .print--cv { margin-left: -14px; }
+  .sheet .print--cv { padding: 7px 7px 0; }
+  .entries .when { grid-column: 1; grid-row: 1; }
+  .entries .what { grid-column: 1 / -1; grid-row: 2; }
+  .cv-logos { grid-column: 1; grid-row: 3; max-width: none; margin-top: 8px; zoom: 0.8; }
+  .cv-logo--text { font-size: 0.7rem; }
+  .pubs li { grid-template-columns: 56px minmax(0, 1fr); column-gap: 16px; }
+  .prints { --row: 150px; gap: 28px 20px; }
+  .about-grid { grid-template-columns: 1fr; gap: 28px; }
+  .about-prints { display: flex; gap: 14px; order: -1; }
+  .about-prints .print--me { flex: 1; margin-top: 0; }
+  .print--me:first-child { transform: rotate(-1.5deg); }
+  .print--me:last-child { transform: rotate(1.8deg); align-self: center; }
+  .sheet h2 { font-size: 1.7rem; }
+  .stacks { grid-template-columns: 1fr 1fr; gap: 36px 22px; }
+  .stack-pile { margin: 8px 8px 16px; }
+  .stack-title { font-size: 0.7rem; }
+  .lightbox { grid-template-columns: 0 minmax(0, 1fr) 0; }
+  .lb-prev, .lb-next { display: none !important; } /* swipe instead */
+  .lb-print { padding: 8px 8px 0; }
+  .lb-print img { max-width: calc(100vw - 32px); }
+  .lb-print figcaption { font-size: 0.66rem; padding: 8px 1px 9px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .print, .stack-pile .print { transition: none; }
+  .lightbox { animation: none; }
+}
