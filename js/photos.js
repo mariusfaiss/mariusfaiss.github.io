@@ -193,13 +193,22 @@
     else if (e.key === "Escape") close();
   });
 
-  // Swipe on touch screens
-  let touchX = null;
-  box.addEventListener("touchstart", (e) => { touchX = e.touches[0].clientX; }, { passive: true });
+  // Touch screens: swipe, or tap the photo on the left/right half of the screen
+  let touchX = null, touchY = null;
+  box.addEventListener("touchstart", (e) => {
+    touchX = e.touches[0].clientX;
+    touchY = e.touches[0].clientY;
+  }, { passive: true });
   box.addEventListener("touchend", (e) => {
     if (touchX === null) return;
-    const dx = e.changedTouches[0].clientX - touchX;
-    if (Math.abs(dx) > 50) show(current + (dx < 0 ? 1 : -1));
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchX, dy = t.clientY - touchY;
     touchX = null;
+    if (Math.abs(dx) > 50) show(current + (dx < 0 ? 1 : -1));
+    else if (Math.abs(dx) < 10 && Math.abs(dy) < 10 &&
+             e.target.closest(".lb-print") && !e.target.closest("a")) {
+      e.preventDefault();  // no click afterwards
+      show(current + (t.clientX < innerWidth / 2 ? -1 : 1));
+    }
   });
 })();

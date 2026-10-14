@@ -603,6 +603,7 @@ a.cv-logo--text:hover { color: var(--accent); }
   grid-template-rows: 64px minmax(0, 1fr);
   align-items: center;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation; /* quick taps through photos, no double-tap zoom */
   background: rgba(30, 28, 25, 0.94);
   color: #e9e4da;
   animation: lb-in 0.2s ease;
