@@ -219,7 +219,7 @@ section[id] { scroll-margin-top: var(--masthead-h); }
 .print--me:nth-child(2) { margin-top: -26px; transform: rotate(-3deg) translateX(-24px); position: relative; }
 .print--me:nth-child(2) .frame { aspect-ratio: 4 / 3; }
 /* Looping map animation below the two photos, kept straight: a tilted video gets jagged edges */
-.print--me.print--video { margin-top: 26px; transform: translateX(8px); }
+.print--me.print--video { margin-top: 26px; transform: translateX(-28px); }
 .print--video video { display: block; width: 100%; height: auto; aspect-ratio: 1; background: #2b2925; cursor: zoom-in; }
 
 /* Enlarged video, opened by clicking the small one */
@@ -419,13 +419,15 @@ a.cv-logo--text:hover { color: var(--accent); }
   box-shadow: var(--shadow);
   transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
-.about-prints .print:hover,
 .prints .print:hover {
   box-shadow: var(--shadow-lifted);
   position: relative;
   z-index: 2;
 }
-.about-prints .print:hover { transform: rotate(0deg) translateY(-4px); }
+/* About prints lift on hover but keep their order, like the CV prints:
+   the lower photo stays on top of the upper one */
+.about-prints .print:hover { transform: rotate(0deg) translateY(-4px); box-shadow: var(--shadow-lifted); }
+.about-prints .print--video:hover { transform: translate(-28px, -4px); }
 .print .frame { display: block; background: #2b2925; overflow: hidden; }
 .print .frame img { width: 100%; height: auto; }
 .print figcaption {
