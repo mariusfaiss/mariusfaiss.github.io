@@ -144,10 +144,12 @@ website photos/
 
 - The number at the start of a folder name (`01 `, `02 `) only sets the order of
   the sets; it isn't shown. The rest is the set's title.
-- On the page, photos keep your order but are grouped into rows by orientation:
-  consecutive horizontal photos share rows, vertical photos get rows of their
-  own with at most two side by side. So the order in which you arrange vertical
-  and horizontal photos decides how they pair up.
+- On the page, photos keep your order. On tablets and computers they are laid
+  out like a photo book (`js/photos.js`): each line holds as many photos as fit,
+  all the same height, filling the width. On phones they are grouped into rows
+  by orientation: horizontal photos one per line, vertical photos at most two
+  side by side. So the order of vertical and horizontal photos decides how they
+  pair up.
 - `photos.py` makes web copies (2000 px, plus 900 px previews) in `photos/`,
   removes all metadata from them (including GPS location), and rebuilds the
   photography page. Originals are never changed.

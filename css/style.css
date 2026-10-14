@@ -260,8 +260,9 @@ section[id] { scroll-margin-top: var(--masthead-h); }
   display: flex;
   align-items: flex-start;
   gap: 0;
+  justify-content: center;
   max-width: 610px;
-  margin: 2.6em 0 0.4em calc(9.5rem + 24px);
+  margin: 2.6em auto 0.4em;
 }
 .sheet .print--cv {
   flex: var(--r) 1 0;
@@ -575,6 +576,14 @@ a.cv-logo--text:hover { color: var(--accent); }
 .prints .print:nth-child(4n)   { transform: rotate(1.4deg) translateX(6px); }
 .prints .print:hover { transform: rotate(0deg) translateY(-4px); }
 .prints .frame { cursor: zoom-in; }
+
+/* Above phone width, js/photos.js lays the photos out like a photo book: the
+   rows above are dissolved, and each line gets photos of equal height that
+   exactly fill the width (widths set by the script) */
+.prints.is-justified { flex-direction: row; flex-wrap: wrap; gap: 40px 34px; }
+.prints.is-justified .prints-row { display: contents; }
+.prints.is-justified .print { flex: none; max-width: none; }
+@media (max-width: 1000px) { .cap-lens { display: none; } } /* shorter captions on tablets */
 
 /* Title travels from the stack to the bar (browsers with view transitions) */
 ::view-transition-group(set-title) { animation-duration: 0.45s; animation-timing-function: cubic-bezier(.2, .8, .2, 1); }

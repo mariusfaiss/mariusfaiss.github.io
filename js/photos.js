@@ -78,6 +78,48 @@
   addEventListener("popstate", route);
   route();
 
+  // ------------------------------------------------------- photo-book layout
+  // Above phone width: put as many photos on a line as fit, all the same
+  // height, filling the width exactly. Phones keep the simpler rows from CSS.
+  const GAP = 34, PAD = 28;  // gap between prints, print border (left + right)
+  function justify(box) {
+    const prints = [...box.querySelectorAll(".print")];
+    const W = box.clientWidth;
+    if (!W) return;  // set not visible yet; the observer runs again when it is
+    if (W < 600) {
+      box.classList.remove("is-justified");
+      prints.forEach((p) => { p.style.width = ""; });
+      return;
+    }
+    box.classList.add("is-justified");
+    const H = W > 800 ? 250 : 230;  // target photo height
+    const ratio = prints.map((p) => parseFloat(p.style.getPropertyValue("--r")) || 1.5);
+    const heightFor = (sum, n) => (W - GAP * (n - 1) - PAD * n) / sum;
+    let line = [], sum = 0;
+    const flush = (last) => {
+      let h = heightFor(sum, line.length);
+      if (last) h = Math.min(h, H);  // don't blow up a short last line
+      line.forEach((i) => { prints[i].style.width = `${ratio[i] * h + PAD}px`; });
+      line = []; sum = 0;
+    };
+    ratio.forEach((r, i) => {
+      if (line.length && heightFor(sum + r, line.length + 1) < H) {
+        // The next photo doesn't fit at full height: take it along (shrinking
+        // the line) or start a new line, whichever stays closer to the target
+        const withIt = heightFor(sum + r, line.length + 1);
+        const without = heightFor(sum, line.length);
+        if (Math.abs(Math.log(withIt / H)) < Math.abs(Math.log(without / H))) {  // compare as proportions
+          line.push(i); sum += r; flush(false); return;
+        }
+        flush(false);
+      }
+      line.push(i); sum += r;
+    });
+    if (line.length) flush(true);
+  }
+  const observer = new ResizeObserver((entries) => entries.forEach((e) => justify(e.target)));
+  setsView.querySelectorAll(".prints").forEach((box) => observer.observe(box));
+
   // ------------------------------------------------------------------ lightbox
   const box = document.getElementById("lightbox");
   const img = box.querySelector("img");
