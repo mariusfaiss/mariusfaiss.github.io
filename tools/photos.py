@@ -307,7 +307,7 @@ def print_rows(prints):
 def set_html(s, tone):
     def figure(p):
         return (
-            f'          <figure class="print" style="--r: {p["w"] / p["h"]:.3f}">\n'
+            f'          <figure class="print{" print--wide" if p["w"] > 2 * p["h"] else ""}" style="--r: {p["w"] / p["h"]:.3f}">\n'
             f'            <a class="frame" href="{p["large"]}">'
             f'<img src="{p["thumb"]}" width="{p["w"]}" height="{p["h"]}" alt="{p["alt"]}" loading="lazy"></a>\n'
             f'            <figcaption><span>{p["left"]}</span><span>{p["right"]}</span></figcaption>\n'

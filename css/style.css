@@ -265,6 +265,7 @@ section[id] { scroll-margin-top: var(--masthead-h); }
 }
 .sheet .print--cv {
   flex: var(--r) 1 0;
+  max-width: calc(var(--r) * 260px);
   min-width: 0;
   padding: 12px 12px 0;
   transform: rotate(-1.2deg);
@@ -510,7 +511,7 @@ a.cv-logo--text:hover { color: var(--accent); }
 /* Set view: each set is a sheet; its title bar sticks to the top while you
    scroll through it and is pushed away by the next set's bar */
 .photo-set { box-shadow: var(--edge-shadow); }
-.set-body { padding: 0 var(--gutter) 96px; }
+.set-body { padding: 0 var(--gutter) 96px; container-type: inline-size; }
 .set-bar {
   position: sticky;
   top: 0;
@@ -550,7 +551,8 @@ a.cv-logo--text:hover { color: var(--accent); }
 /* Justified rows: each print grows in proportion to its aspect ratio (--r),
    so portraits, landscapes and panoramas share a row at equal height */
 .prints {
-  --row: 190px;
+  /* Row height chosen so two 3:2 photos exactly fill a line at any width */
+  --row: calc((100cqw - 34px) / 3);
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -559,14 +561,14 @@ a.cv-logo--text:hover { color: var(--accent); }
 /* Rows are grouped by tools/photos.py: horizontal photos wrap together;
    vertical photos sit in their own rows, at most two, centred */
 .prints-row { display: flex; flex-wrap: wrap; gap: 40px 34px; }
-.prints-row::after { content: ""; flex: 999 1 0; } /* keeps the last line from stretching */
 .prints-row--vertical { justify-content: center; }
-.prints-row--vertical::after { content: none; }
 .prints .print {
   --r: 1.5;
   flex: var(--r) 1 calc(var(--r) * var(--row));
-  max-width: calc(var(--r) * var(--row) * 1.6);
+  max-width: calc(var(--r) * var(--row) + 8px); /* lines of two fill exactly; a lone photo doesn't balloon */
 }
+.prints .prints-row--vertical .print { max-width: min(calc(var(--r) * var(--row) * 1.6), 250px); }
+.prints .print--wide { max-width: none; } /* panoramas fill their own line */
 .prints .print:nth-child(4n+1) { transform: rotate(-1.2deg); }
 .prints .print:nth-child(4n+2) { transform: rotate(0.8deg) translateY(10px); }
 .prints .print:nth-child(4n+3) { transform: rotate(-0.4deg); }
@@ -688,7 +690,7 @@ a.cv-logo--text:hover { color: var(--accent); }
   .pubs li { grid-template-columns: 56px minmax(0, 1fr); column-gap: 16px; }
   .prints { --row: 150px; gap: 28px; }
   .prints-row { gap: 28px 20px; }
-  .prints-row::after { content: none; } /* one horizontal photo per line anyway: let each fill it */
+  .prints-row:not(.prints-row--vertical) .print { max-width: none; } /* one per line: fill it */
   .cap-lens { display: none; } /* keep photo captions short on phones */
   .about-grid { grid-template-columns: 1fr; gap: 28px; }
   .about-prints { display: flex; gap: 14px; order: -1; }
