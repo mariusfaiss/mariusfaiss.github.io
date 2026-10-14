@@ -22,10 +22,11 @@
   const fig = document.querySelector(".print--video");
   if (!fig) return;
   const photos = document.querySelector(".about-prints");
-  const tags = document.querySelector(".about-text .interests");
+  // On phones: above the last About paragraph (the one just before the tags)
+  const spot = document.querySelector(".about-text .interests").previousElementSibling;
   const phone = matchMedia("(max-width: 640px)");
   const place = () => {
-    if (phone.matches) tags.before(fig);
+    if (phone.matches) spot.before(fig);
     else photos.append(fig);
     const v = fig.querySelector("video");
     if (v.autoplay) v.play().catch(() => {});  // moving an element pauses it

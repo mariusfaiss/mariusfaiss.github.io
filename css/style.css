@@ -51,7 +51,14 @@
 
 * { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; background: var(--offwhite); }
+/* The page behind everything (also what shows around the iPhone's status bar
+   and when scrolling past the ends) is the cardboard of the top bar */
+html {
+  -webkit-text-size-adjust: 100%;
+  background: var(--card) url("../img/paper-card.jpg");
+  background-size: 384px 384px;
+  background-blend-mode: multiply;
+}
 
 body {
   margin: 0;
@@ -116,7 +123,7 @@ main { display: flex; flex-direction: column; min-height: 100vh; }
   align-items: baseline;
   justify-content: space-between;
   gap: 12px 32px;
-  padding-block: 30px 26px;
+  padding-block: calc(30px + env(safe-area-inset-top, 0px)) 26px;
 }
 .masthead.is-stuck { box-shadow: 0 10px 20px -16px rgba(40, 28, 12, 0.45), 0 1px 0 rgba(70, 52, 28, 0.06); }
 body.viewing-set .masthead { position: relative; box-shadow: none; }
@@ -562,20 +569,22 @@ a.cv-logo--text:hover { color: var(--accent); }
   z-index: 100;
   display: grid;
   grid-template-columns: 72px minmax(0, 1fr) 72px;
-  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-rows: 64px minmax(0, 1fr);
   align-items: center;
+  -webkit-tap-highlight-color: transparent;
   background: rgba(30, 28, 25, 0.94);
   color: #e9e4da;
   animation: lb-in 0.2s ease;
 }
 @keyframes lb-in { from { opacity: 0; } }
+.lightbox:focus { outline: none; }
 .lb-stage {
   grid-column: 2;
-  grid-row: 1;
+  grid-row: 2;
   display: grid;
   place-items: center;
   height: 100%;
-  padding: 32px 0 12px;
+  padding: 0 0 20px;
   min-height: 0;
 }
 .lb-print {
@@ -608,11 +617,11 @@ a.cv-logo--text:hover { color: var(--accent); }
   width: 0;
   min-width: 100%; /* as wide as the photo, never wider */
 }
+/* Top row: "Set name · 3 / 25" on the left, close button on the right */
 .lb-count {
   grid-column: 2;
-  grid-row: 2;
-  justify-self: center;
-  padding: 0 0 20px;
+  grid-row: 1;
+  justify-self: start;
   font-family: var(--mono);
   font-size: 0.72rem;
   color: #b9b2a4;
@@ -631,10 +640,12 @@ a.cv-logo--text:hover { color: var(--accent); }
   transition: background-color 0.2s ease;
 }
 .lightbox button:hover { background: rgba(255, 255, 255, 0.1); }
+.lightbox button:focus { outline: none; }
+.lightbox button:focus-visible { outline: 1.5px solid #e9e4da; outline-offset: 2px; }
 .lightbox button svg { width: 26px; height: 26px; }
-.lb-prev { grid-column: 1; grid-row: 1; justify-self: center; }
-.lb-next { grid-column: 3; grid-row: 1; justify-self: center; }
-.lb-close { position: absolute; top: 14px; right: 14px; }
+.lb-prev { grid-column: 1; grid-row: 2; justify-self: center; }
+.lb-next { grid-column: 3; grid-row: 2; justify-self: center; }
+.lb-close { grid-column: 2; grid-row: 1; justify-self: end; margin-right: -12px; }
 
 /* --------------------------------------------------------------------------
    Small screens and motion preferences
@@ -644,7 +655,7 @@ a.cv-logo--text:hover { color: var(--accent); }
   body { font-size: 1.05rem; }
   :root { --gutter: 18px; }
   :root { --masthead-h: 76px; }
-  .masthead { padding-block: 14px 12px; gap: 4px 16px; }
+  .masthead { padding-block: calc(14px + env(safe-area-inset-top, 0px)) 12px; gap: 4px 16px; }
   .masthead h1 { font-size: 1.35rem; }
   .masthead nav { gap: 2px 14px; font-size: 0.74rem; }
   .entries li { grid-template-columns: minmax(0, 1fr); gap: 0; }
@@ -657,6 +668,7 @@ a.cv-logo--text:hover { color: var(--accent); }
   .cv-logo--text { font-size: 0.7rem; }
   .pubs li { grid-template-columns: 56px minmax(0, 1fr); column-gap: 16px; }
   .prints { --row: 150px; gap: 28px 20px; }
+  .cap-lens { display: none; } /* keep photo captions short on phones */
   .about-grid { grid-template-columns: 1fr; gap: 28px; }
   .about-prints { display: flex; gap: 14px; order: -1; }
   .about-prints .print--me { flex: 1; margin-top: 0; }
@@ -669,10 +681,12 @@ a.cv-logo--text:hover { color: var(--accent); }
   .stacks { grid-template-columns: 1fr 1fr; gap: 36px 22px; }
   .stack-pile { margin: 8px 8px 16px; }
   .stack-title { font-size: 0.7rem; }
-  .lightbox { grid-template-columns: 0 minmax(0, 1fr) 0; }
   .lb-prev, .lb-next { display: none !important; } /* swipe instead */
+  .lightbox { grid-template-columns: 16px minmax(0, 1fr) 16px; grid-template-rows: calc(56px + env(safe-area-inset-top, 0px)) minmax(0, 1fr); }
+  .lb-count, .lb-close { align-self: end; margin-bottom: 4px; }
+  .lb-count { font-size: 0.68rem; margin-bottom: 18px; }
   .lb-print { padding: 8px 8px 0; }
-  .lb-print img { max-width: calc(100vw - 32px); }
+  .lb-print img { max-width: calc(100vw - 48px); }
   .lb-print figcaption { font-size: 0.66rem; padding: 8px 1px 9px; }
 }
 

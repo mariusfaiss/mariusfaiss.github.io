@@ -246,13 +246,19 @@ def build_set(set_dir):
         w, h = size_of(thumb)
 
         e = lambda k: html.escape((row.get(k) or "").strip())
-        gear = " · ".join(x for x in (e("camera"), e("lens")) if x)
+        # Lens wrapped in its own span (with its separator) so phones can hide it
+        camera, lens, film = e("camera"), e("lens"), e("film")
+        right = camera
+        if lens:
+            right += f'<span class="cap-lens"> · {lens}</span>' if camera else f'<span class="cap-lens">{lens} · </span>'
+        if film:
+            right += (" · " if camera else "") + film
         prints.append({
             "large": f"photos/{slug}/{stem}.jpg",
             "thumb": f"photos/{slug}/{stem}-thumb.jpg",
             "w": w, "h": h,
             "left": " · ".join(x for x in (e("caption"), e("date")) if x),
-            "right": " · ".join(x for x in (gear, e("film")) if x),
+            "right": right,
             "alt": e("caption") or html.escape(display_name(set_dir.name)),
         })
 
