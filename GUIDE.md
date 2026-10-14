@@ -201,8 +201,8 @@ and their web copies are removed (anything typed for them is lost).
 
 Columns: `order, file, caption, camera, lens, film, date`
 
-- `caption` and `date` show at the bottom left of a print, `camera · lens · film`
-  at the bottom right. Empty cells are left out.
+- `caption` and `date` show on the print in the gallery; `camera · lens · film`
+  is added in the full view (the photo viewer). Empty cells are left out.
 - Don't change the `file` column or the header row.
 
 **In Numbers:**

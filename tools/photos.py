@@ -310,7 +310,7 @@ def set_html(s, tone):
             f'          <figure class="print{" print--wide" if p["w"] > 2 * p["h"] else ""}" style="--r: {p["w"] / p["h"]:.3f}">\n'
             f'            <a class="frame" href="{p["large"]}">'
             f'<img src="{p["thumb"]}" width="{p["w"]}" height="{p["h"]}" alt="{p["alt"]}" loading="lazy"></a>\n'
-            f'            <figcaption><span>{p["left"]}</span><span>{p["right"]}</span></figcaption>\n'
+            f'            <figcaption><span>{p["left"]}</span><span class="cap-gear">{p["right"]}</span></figcaption>\n'
             f'          </figure>'
         )
     prints = "\n".join(
