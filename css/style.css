@@ -463,14 +463,28 @@ a.cv-logo--text:hover { color: var(--accent); }
   display: block;
   aspect-ratio: 4 / 3;
   margin: 14px 14px 22px;
+  container-type: size;
 }
+/* Each print in the pile keeps its photo's real proportions (--r), as large as
+   fits in the pile's box, and centred */
 .stack-pile .print {
+  --r: 1.5;
   position: absolute;
   inset: 0;
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
   padding: 9px;
   transition: transform 0.45s cubic-bezier(.2, .8, .2, 1), box-shadow 0.45s ease;
 }
-.stack-pile .print img { width: 100%; height: 100%; object-fit: cover; background: #2b2925; }
+.stack-pile .print img {
+  display: block;
+  width: min(calc(100cqw - 18px), calc((100cqh - 18px) * var(--r)));
+  height: auto;
+  aspect-ratio: var(--r);
+  object-fit: cover;
+  background: #2b2925;
+}
 .stack-pile .print:nth-child(1) { transform: rotate(-5deg) translate(-4px, 2px); }
 .stack-pile .print:nth-child(2) { transform: rotate(3.5deg) translate(3px, -2px); }
 .stack-pile .print:nth-child(3) { transform: rotate(-0.8deg); }
@@ -538,11 +552,16 @@ a.cv-logo--text:hover { color: var(--accent); }
 .prints {
   --row: 190px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 40px 34px;
+  flex-direction: column;
+  gap: 40px;
   margin-top: 40px;
 }
-.prints::after { content: ""; flex: 999 1 0; } /* keeps the last row from stretching */
+/* Rows are grouped by tools/photos.py: horizontal photos wrap together;
+   vertical photos sit in their own rows, at most two, centred */
+.prints-row { display: flex; flex-wrap: wrap; gap: 40px 34px; }
+.prints-row::after { content: ""; flex: 999 1 0; } /* keeps the last line from stretching */
+.prints-row--vertical { justify-content: center; }
+.prints-row--vertical::after { content: none; }
 .prints .print {
   --r: 1.5;
   flex: var(--r) 1 calc(var(--r) * var(--row));
@@ -667,7 +686,9 @@ a.cv-logo--text:hover { color: var(--accent); }
   .cv-logos { grid-column: 1; grid-row: 3; max-width: none; margin-top: 8px; zoom: 0.8; }
   .cv-logo--text { font-size: 0.7rem; }
   .pubs li { grid-template-columns: 56px minmax(0, 1fr); column-gap: 16px; }
-  .prints { --row: 150px; gap: 28px 20px; }
+  .prints { --row: 150px; gap: 28px; }
+  .prints-row { gap: 28px 20px; }
+  .prints-row::after { content: none; } /* one horizontal photo per line anyway: let each fill it */
   .cap-lens { display: none; } /* keep photo captions short on phones */
   .about-grid { grid-template-columns: 1fr; gap: 28px; }
   .about-prints { display: flex; gap: 14px; order: -1; }

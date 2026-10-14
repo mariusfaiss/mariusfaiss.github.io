@@ -276,7 +276,7 @@ def build_set(set_dir):
 def stack_html(s):
     """Overview: the first three photos as a small pile, first photo on top."""
     pile = "".join(
-        f'<span class="print"><img src="{p["thumb"]}" alt="" loading="lazy"></span>'
+        f'<span class="print" style="--r: {p["w"] / p["h"]:.3f}"><img src="{p["thumb"]}" alt="" loading="lazy"></span>'
         for p in reversed(s["prints"][:3])
     )
     n = len(s["prints"])
@@ -289,14 +289,35 @@ def stack_html(s):
     )
 
 
+def print_rows(prints):
+    """Group the prints into rows, keeping their order: consecutive horizontal
+    photos share rows (wrapping as the screen allows), vertical photos get rows
+    of their own with at most two side by side."""
+    rows = []
+    for p in prints:
+        vertical = p["h"] > p["w"] * 1.05
+        last = rows[-1] if rows else None
+        if last and last["vertical"] == vertical and (not vertical or len(last["prints"]) < 2):
+            last["prints"].append(p)
+        else:
+            rows.append({"vertical": vertical, "prints": [p]})
+    return rows
+
+
 def set_html(s, tone):
+    def figure(p):
+        return (
+            f'          <figure class="print" style="--r: {p["w"] / p["h"]:.3f}">\n'
+            f'            <a class="frame" href="{p["large"]}">'
+            f'<img src="{p["thumb"]}" width="{p["w"]}" height="{p["h"]}" alt="{p["alt"]}" loading="lazy"></a>\n'
+            f'            <figcaption><span>{p["left"]}</span><span>{p["right"]}</span></figcaption>\n'
+            f'          </figure>'
+        )
     prints = "\n".join(
-        f'        <figure class="print" style="--r: {p["w"] / p["h"]:.3f}">\n'
-        f'          <a class="frame" href="{p["large"]}">'
-        f'<img src="{p["thumb"]}" width="{p["w"]}" height="{p["h"]}" alt="{p["alt"]}" loading="lazy"></a>\n'
-        f'          <figcaption><span>{p["left"]}</span><span>{p["right"]}</span></figcaption>\n'
-        f'        </figure>'
-        for p in s["prints"]
+        f'        <div class="prints-row{" prints-row--vertical" if row["vertical"] else ""}">\n'
+        + "\n".join(figure(p) for p in row["prints"])
+        + "\n        </div>"
+        for row in print_rows(s["prints"])
     )
     about = f'\n      <p class="set-about">{s["about"]}</p>' if s["about"] else ""
     n = len(s["prints"])
