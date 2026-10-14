@@ -233,6 +233,22 @@ The two portraits are placed by hand in `index.html` (search for
 `about-prints`). To use a different photo, put it in `Marius/`, run
 `photos.py`, and change the file name in that part of `index.html`.
 
+### Looping video in the About section
+
+The map animation below the portraits is `video/honr-movement.mp4` (with a
+still frame `video/honr-movement.jpg` shown while it loads, and to visitors
+who have reduced motion switched on). To replace it, convert the new video
+with ffmpeg (installed via Homebrew):
+
+```bash
+ffmpeg -i "input.mp4" -an -map_metadata -1 -vf "scale=600:-2:flags=lanczos" -c:v libx264 -preset slow -crf 26 -pix_fmt yuv420p -movflags +faststart video/honr-movement.mp4
+ffmpeg -y -ss 1 -i video/honr-movement.mp4 -frames:v 1 -q:v 4 video/honr-movement.jpg
+```
+
+`-an` removes sound, `-map_metadata -1` removes metadata (such as location),
+`-crf` sets quality (higher = smaller file; 23–30 is a good range). Keep it
+under ~2–3 MB. MP4 is much smaller and nicer than a GIF for this.
+
 ---
 
 ## Publications

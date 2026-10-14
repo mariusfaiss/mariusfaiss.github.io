@@ -209,8 +209,11 @@ section[id] { scroll-margin-top: var(--masthead-h); }
 .print--me:first-child { transform: rotate(2.2deg); }
 .print--me:first-child .frame { aspect-ratio: 4 / 5; }
 .about-prints .print--me:first-child img { height: 100%; object-fit: cover; object-position: 41% 40%; }
-.print--me:last-child { margin-top: -26px; transform: rotate(-3deg) translateX(-24px); position: relative; }
-.print--me:last-child .frame { aspect-ratio: 4 / 3; }
+.print--me:nth-child(2) { margin-top: -26px; transform: rotate(-3deg) translateX(-24px); position: relative; }
+.print--me:nth-child(2) .frame { aspect-ratio: 4 / 3; }
+/* Looping map animation below the two photos */
+.print--me.print--video { margin-top: 26px; transform: rotate(1.4deg) translateX(8px); }
+.print--video video { display: block; width: 100%; height: auto; aspect-ratio: 1; background: #2b2925; }
 .print--me:not(:has(figcaption)) { padding-bottom: 10px; }
 
 /* Prints lying on the CV between Education and Experience: side by side,
@@ -627,7 +630,9 @@ a.cv-logo--text:hover { color: var(--accent); }
   .about-prints { display: flex; gap: 14px; order: -1; }
   .about-prints .print--me { flex: 1; margin-top: 0; }
   .print--me:first-child { transform: rotate(-1.5deg); }
-  .print--me:last-child { transform: rotate(1.8deg); align-self: center; }
+  .print--me:nth-child(2) { transform: rotate(1.8deg); align-self: center; }
+  .about-prints { flex-wrap: wrap; }
+  .about-prints .print--video { flex: 0 0 72%; margin: 8px auto 0; transform: rotate(-1deg); }
   .sheet h2 { font-size: 1.7rem; }
   .stacks { grid-template-columns: 1fr 1fr; gap: 36px 22px; }
   .stack-pile { margin: 8px 8px 16px; }
