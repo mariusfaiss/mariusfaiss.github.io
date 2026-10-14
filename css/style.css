@@ -218,8 +218,8 @@ section[id] { scroll-margin-top: var(--masthead-h); }
 .about-prints .print--me:first-child img { height: 100%; object-fit: cover; object-position: 41% 40%; }
 .print--me:nth-child(2) { margin-top: -26px; transform: rotate(-3deg) translateX(-24px); position: relative; }
 .print--me:nth-child(2) .frame { aspect-ratio: 4 / 3; }
-/* Looping map animation below the two photos */
-.print--me.print--video { margin-top: 26px; transform: rotate(1.4deg) translateX(8px); }
+/* Looping map animation below the two photos, kept straight: a tilted video gets jagged edges */
+.print--me.print--video { margin-top: 26px; transform: translateX(8px); }
 .print--video video { display: block; width: 100%; height: auto; aspect-ratio: 1; background: #2b2925; cursor: zoom-in; }
 
 /* Enlarged video, opened by clicking the small one */
@@ -709,7 +709,7 @@ a.cv-logo--text:hover { color: var(--accent); }
   .print--me:nth-child(2) { transform: rotate(1.8deg); align-self: center; }
   .about-prints { flex-wrap: wrap; }
   /* On phones the video is moved (by js/site.js) between the About text and the tags */
-  .about-text .print--video { width: 72%; margin: 6px auto 24px; transform: rotate(-1deg); }
+  .about-text .print--video { width: 72%; margin: 6px auto 24px; transform: none; }
   .sheet h2 { font-size: 1.7rem; }
   .stacks { grid-template-columns: 1fr 1fr; gap: 36px 22px; }
   .stack-pile { margin: 8px 8px 16px; }
