@@ -44,6 +44,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+from stamp import stamp
+
 try:
     from PIL import Image, ImageOps
 except ImportError:
@@ -381,6 +383,7 @@ def main():
         build(source)
     except InfoFileError as exc:
         sys.exit(f"Stopped: {exc}")
+    stamp()
 
 
 if __name__ == "__main__":

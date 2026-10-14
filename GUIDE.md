@@ -68,6 +68,7 @@ public, and only small web versions should be published.
 | Script | What it does |
 |---|---|
 | `photos.py` | Resizes photos, strips their metadata (GPS etc.), updates `info.csv` files and rebuilds the photography page |
+| `stamp.py` | Tags the CSS/JS links with a version so browsers don't show a stale stylesheet (run after editing `css/` or `js/`; `photos.py` runs it too) |
 | `sorter.py` | Drag-and-drop page for reordering photos |
 | `pub_thumbs.py` | Makes the publication thumbnails |
 | `paper_textures.py` | Makes the paper textures (synthesised, see [The paper look](#the-paper-look)) |
@@ -382,8 +383,14 @@ how many fibres a tile has.
 
 ## Troubleshooting
 
-**A change doesn't show in the browser.** Press **Cmd+Shift+R**. On the live
-site, wait a minute or two after pushing.
+**A change doesn't show in the browser.** Press **Cmd+Shift+R** (Safari:
+**Cmd+Option+R**). On the live site, wait a minute or two after pushing.
+
+**The live site looks half old, half new** (e.g. photos cropped, the video
+zoomed in, captions that should be hidden). The browser kept an old
+`style.css`. Run `python3 tools/stamp.py` after editing anything in `css/` or
+`js/`, commit the changed `.html` files along with it, and push: the links then
+carry a new version (`style.css?v=…`) and every browser loads the new file.
 
 **`can't open file '/Users/mfaiss/tools/...'`.** The command was run from the
 wrong folder. Use the full path:
