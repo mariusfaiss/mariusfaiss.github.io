@@ -15,3 +15,37 @@
     v.pause();
   });
 })();
+
+// About video: sits under the photos on wide screens, but between the text and
+// the interest tags on phones; clicking it opens a larger view
+(() => {
+  const fig = document.querySelector(".print--video");
+  if (!fig) return;
+  const photos = document.querySelector(".about-prints");
+  const tags = document.querySelector(".about-text .interests");
+  const phone = matchMedia("(max-width: 640px)");
+  const place = () => {
+    if (phone.matches) tags.before(fig);
+    else photos.append(fig);
+    const v = fig.querySelector("video");
+    if (v.autoplay) v.play().catch(() => {});  // moving an element pauses it
+  };
+  phone.addEventListener("change", place);
+  place();
+
+  fig.addEventListener("click", () => {
+    const small = fig.querySelector("video");
+    const viewer = document.createElement("div");
+    viewer.className = "video-viewer";
+    viewer.innerHTML = `<figure><video src="${small.currentSrc || small.src}" muted loop playsinline autoplay></video>
+      <figcaption>${fig.querySelector("figcaption").textContent}</figcaption></figure>`;
+    const big = viewer.querySelector("video");
+    big.currentTime = small.currentTime;
+    const close = () => { viewer.remove(); removeEventListener("keydown", onKey); document.documentElement.style.overflow = ""; };
+    const onKey = (e) => { if (e.key === "Escape") close(); };
+    viewer.addEventListener("click", close);
+    addEventListener("keydown", onKey);
+    document.documentElement.style.overflow = "hidden";
+    document.body.append(viewer);
+  });
+})();

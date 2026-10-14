@@ -213,7 +213,38 @@ section[id] { scroll-margin-top: var(--masthead-h); }
 .print--me:nth-child(2) .frame { aspect-ratio: 4 / 3; }
 /* Looping map animation below the two photos */
 .print--me.print--video { margin-top: 26px; transform: rotate(1.4deg) translateX(8px); }
-.print--video video { display: block; width: 100%; height: auto; aspect-ratio: 1; background: #2b2925; }
+.print--video video { display: block; width: 100%; height: auto; aspect-ratio: 1; background: #2b2925; cursor: zoom-in; }
+
+/* Enlarged video, opened by clicking the small one */
+.video-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(30, 28, 25, 0.94);
+  cursor: zoom-out;
+  animation: lb-in 0.2s ease;
+}
+.video-viewer figure {
+  margin: 0;
+  padding: 14px 14px 0;
+  background: var(--photo);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+.video-viewer video {
+  display: block;
+  width: min(86vw, calc(100vh - 110px), 900px);
+  width: min(86vw, calc(100dvh - 110px), 900px);
+  aspect-ratio: 1;
+}
+.video-viewer figcaption {
+  padding: 11px 2px 13px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+}
 .print--me:not(:has(figcaption)) { padding-bottom: 10px; }
 
 /* Prints lying on the CV between Education and Experience: side by side,
@@ -632,7 +663,8 @@ a.cv-logo--text:hover { color: var(--accent); }
   .print--me:first-child { transform: rotate(-1.5deg); }
   .print--me:nth-child(2) { transform: rotate(1.8deg); align-self: center; }
   .about-prints { flex-wrap: wrap; }
-  .about-prints .print--video { flex: 0 0 72%; margin: 8px auto 0; transform: rotate(-1deg); }
+  /* On phones the video is moved (by js/site.js) between the About text and the tags */
+  .about-text .print--video { width: 72%; margin: 6px auto 24px; transform: rotate(-1deg); }
   .sheet h2 { font-size: 1.7rem; }
   .stacks { grid-template-columns: 1fr 1fr; gap: 36px 22px; }
   .stack-pile { margin: 8px 8px 16px; }
