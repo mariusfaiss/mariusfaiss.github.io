@@ -583,7 +583,7 @@ a.cv-logo--text:hover { color: var(--accent); }
 .prints.is-justified { flex-direction: row; flex-wrap: wrap; gap: 40px 34px; }
 .prints.is-justified .prints-row { display: contents; }
 .prints.is-justified .print { flex: none; max-width: none; }
-@media (max-width: 1000px) { .cap-lens { display: none; } } /* shorter captions on tablets */
+@media (max-width: 1000px) { .prints .cap-lens { display: none; } } /* shorter gallery captions on tablets; the viewer keeps the lens */
 
 /* Title travels from the stack to the bar (browsers with view transitions) */
 ::view-transition-group(set-title) { animation-duration: 0.45s; animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
