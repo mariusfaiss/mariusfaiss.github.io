@@ -86,6 +86,7 @@ main { display: flex; flex-direction: column; min-height: 100vh; }
 .paper, body, .masthead {
   --tone: var(--offwhite);
   --texture: url("../img/paper-offwhite.jpg");
+  --tint: #eee8dd; /* average shade of the textured paper, for the iPhone status bar */
   position: relative;
   background-color: var(--tone);
   background-image: var(--texture);
@@ -93,11 +94,11 @@ main { display: flex; flex-direction: column; min-height: 100vh; }
   background-blend-mode: multiply;
 }
 
-.paper--white    { --tone: var(--white);    --texture: url("../img/paper-white.jpg"); }
-.paper--offwhite { --tone: var(--offwhite); --texture: url("../img/paper-offwhite.jpg"); }
-.paper--cream    { --tone: var(--cream);    --texture: url("../img/paper-cream.jpg"); }
-.paper--aged     { --tone: var(--aged);     --texture: url("../img/paper-aged.jpg"); }
-.masthead        { --tone: var(--card);     --texture: url("../img/paper-card.jpg"); }
+.paper--white    { --tone: var(--white);    --texture: url("../img/paper-white.jpg"); --tint: #f5f2eb; }
+.paper--offwhite { --tone: var(--offwhite); --texture: url("../img/paper-offwhite.jpg"); --tint: #eee8dd; }
+.paper--cream    { --tone: var(--cream);    --texture: url("../img/paper-cream.jpg"); --tint: #e8e0cb; }
+.paper--aged     { --tone: var(--aged);     --texture: url("../img/paper-aged.jpg"); --tint: #e2d6bb; }
+.masthead        { --tone: var(--card);     --texture: url("../img/paper-card.jpg"); --tint: #e1d7c3; }
 
 /* --------------------------------------------------------------------------
    Sheets: full-width, each lying on top of the previous one
@@ -124,6 +125,23 @@ main { display: flex; flex-direction: column; min-height: 100vh; }
   justify-content: space-between;
   gap: 12px 32px;
   padding-block: calc(30px + env(safe-area-inset-top, 0px)) 26px;
+}
+/* iPhone Safari fills the status bar strip above the page with the background
+   colour of the bar at the top. That colour is the paper's average shade; the
+   textured paper itself is drawn on a layer over it. */
+.masthead, .set-bar {
+  isolation: isolate;
+  background: var(--tint);
+}
+.masthead::before, .set-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--tone);
+  background-image: var(--texture);
+  background-size: 384px 384px;
+  background-blend-mode: multiply;
 }
 .masthead.is-stuck { box-shadow: 0 10px 20px -16px rgba(40, 28, 12, 0.45), 0 1px 0 rgba(70, 52, 28, 0.06); }
 section[id] { scroll-margin-top: var(--masthead-h); }
@@ -221,7 +239,11 @@ section[id] { scroll-margin-top: var(--masthead-h); }
 .print--me:nth-child(2) .frame { aspect-ratio: 4 / 3; }
 /* Looping map animation below the two photos, kept straight: a tilted video gets jagged edges */
 .print--me.print--video { margin-top: 26px; transform: translateX(-28px); }
-.print--video video { display: block; width: 100%; height: auto; aspect-ratio: 1; background: #2b2925; cursor: zoom-in; }
+.print--video { cursor: zoom-in; }
+.print--video video { display: block; width: 100%; height: auto; aspect-ratio: 1; background: #2b2925; }
+/* A clear layer over the video catches taps (iPhones keep them for the video) */
+.print--video .frame { position: relative; }
+.print--video .frame::after { content: ""; position: absolute; inset: 0; }
 
 /* Enlarged video, opened by clicking the small one */
 .video-viewer {
@@ -243,8 +265,9 @@ section[id] { scroll-margin-top: var(--masthead-h); }
 }
 .video-viewer video {
   display: block;
-  width: min(86vw, calc(100vh - 110px), 900px);
-  width: min(86vw, calc(100dvh - 110px), 900px);
+  /* fits the screen with the viewer's and the print's margins (24 + 14 px a side) */
+  width: min(calc(100vw - 76px), calc(100vh - 110px), 900px);
+  width: min(calc(100vw - 76px), calc(100dvh - 110px), 900px);
   aspect-ratio: 1;
 }
 .video-viewer figcaption {
@@ -524,7 +547,6 @@ a.cv-logo--text:hover { color: var(--accent); }
   align-items: baseline;
   gap: 8px 16px;
   padding: 18px var(--gutter);
-  background-color: var(--tone);
   box-shadow: 0 10px 18px -16px rgba(40, 28, 12, 0.5);
 }
 .set-bar h2 { margin: 0; font-size: 1rem; }
