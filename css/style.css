@@ -751,6 +751,35 @@ a.cv-logo--text:hover { color: var(--accent); }
   .lb-print figcaption { font-size: 0.66rem; padding: 8px 1px 9px; }
 }
 
+/* Phones turned sideways: the photo gets the whole screen. The title row,
+   arrows and caption are left out (tap or swipe to move on); only a small
+   close button stays in the corner. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .lightbox {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    padding: 6px max(10px, env(safe-area-inset-right)) 6px max(10px, env(safe-area-inset-left));
+  }
+  .lb-stage { grid-column: 1; grid-row: 1; padding: 0; }
+  .lb-count, .lb-prev, .lb-next, .lb-print figcaption { display: none !important; }
+  .lb-print { padding: 6px; }
+  .lb-print img {
+    max-width: calc(100vw - max(10px, env(safe-area-inset-left)) - max(10px, env(safe-area-inset-right)) - 12px);
+    max-height: calc(100vh - 24px);
+    max-height: calc(100dvh - 24px);
+  }
+  .lb-close {
+    position: absolute;
+    top: 4px;
+    right: max(4px, env(safe-area-inset-right));
+    margin: 0;
+    width: 40px;
+    height: 40px;
+    background: rgba(43, 40, 37, 0.6) !important;
+  }
+  .lightbox button svg { width: 22px; height: 22px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .print, .stack-pile .print { transition: none; }
   .lightbox { animation: none; }
