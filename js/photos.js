@@ -36,7 +36,8 @@
       document.body.classList.add("viewing-set");
       overview.hidden = true;
       setsView.hidden = false;
-      scrollTo(0, pageTop(section));
+      // just below the name bar, where the set's own bar sticks
+      scrollTo(0, pageTop(section) - parseFloat(getComputedStyle(section.querySelector(".set-bar")).top));
     };
     animate ? morph(stackTitle(slug), barTitle(slug), update) : update();
   }
@@ -197,6 +198,10 @@
     else if (e.key === "ArrowLeft") show(current - 1);
     else if (e.key === "Escape") close();
   });
+
+  // Touch screens: no scrolling while the viewer is open (on iPhones it would
+  // only bring back the address bar and shrink the photo)
+  box.addEventListener("touchmove", (e) => e.preventDefault(), { passive: false });
 
   // Touch screens: swipe, or tap the photo on the left/right half of the screen
   let touchX = null, touchY = null;

@@ -109,8 +109,8 @@ main { display: flex; flex-direction: column; min-height: 100vh; }
   box-shadow: var(--edge-shadow);
 }
 
-/* The name and menu stay at the top while scrolling (not inside an open photo
-   set, which has its own bar) */
+/* The name and menu stay at the top while scrolling (on phones not inside an
+   open photo set, which has its own bar) */
 .masthead {
   position: sticky;
   top: 0;
@@ -126,7 +126,6 @@ main { display: flex; flex-direction: column; min-height: 100vh; }
   padding-block: calc(30px + env(safe-area-inset-top, 0px)) 26px;
 }
 .masthead.is-stuck { box-shadow: 0 10px 20px -16px rgba(40, 28, 12, 0.45), 0 1px 0 rgba(70, 52, 28, 0.06); }
-body.viewing-set .masthead { position: relative; box-shadow: none; }
 section[id] { scroll-margin-top: var(--masthead-h); }
 .masthead h1 {
   margin: 0;
@@ -519,7 +518,7 @@ a.cv-logo--text:hover { color: var(--accent); }
 .set-body { padding: 0 var(--gutter) 96px; container-type: inline-size; }
 .set-bar {
   position: sticky;
-  top: 0;
+  top: var(--masthead-h); /* just below the name bar; js/site.js measures it */
   z-index: 10;
   display: flex;
   align-items: baseline;
@@ -549,7 +548,7 @@ a.cv-logo--text:hover { color: var(--accent); }
 .back:hover { color: var(--accent); }
 .back:hover svg { transform: translateX(-3px); }
 .set-count { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-faint); margin-left: auto; }
-.set-about { margin: 28px 0 0; max-width: 56ch; color: var(--ink-soft); }
+.set-about { margin: 28px 0 0; color: var(--ink-soft); }
 
 [hidden] { display: none !important; }
 
@@ -608,6 +607,7 @@ a.cv-logo--text:hover { color: var(--accent); }
   align-items: center;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation; /* quick taps through photos, no double-tap zoom */
+  overscroll-behavior: contain;
   background: rgba(30, 28, 25, 0.94);
   color: #e9e4da;
   animation: lb-in 0.2s ease;
@@ -693,6 +693,8 @@ a.cv-logo--text:hover { color: var(--accent); }
   :root { --masthead-h: 76px; }
   .masthead { padding-block: calc(14px + env(safe-area-inset-top, 0px)) 12px; gap: 4px 16px; }
   .masthead h1 { font-size: 1.35rem; }
+  body.viewing-set .masthead { position: relative; box-shadow: none; }
+  .set-bar { top: 0; }
   .masthead nav { gap: 2px 14px; font-size: 0.74rem; }
   .entries li { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .cv-prints { margin-left: 0; }
@@ -706,7 +708,7 @@ a.cv-logo--text:hover { color: var(--accent); }
   .prints { --row: 150px; gap: 28px; }
   .prints-row { gap: 28px 20px; }
   .prints-row:not(.prints-row--vertical) .print { max-width: none; } /* one per line: fill it */
-  .about-grid { grid-template-columns: 1fr; gap: 28px; }
+  .about-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; } /* never wider than the screen (Safari sized it to the 600 px video) */
   .about-prints { display: flex; gap: 14px; order: -1; }
   .about-prints .print--me { flex: 1; margin-top: 0; }
   .print--me:first-child { transform: rotate(-1.5deg); }

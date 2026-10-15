@@ -5,6 +5,10 @@
   const update = () => bar.classList.toggle("is-stuck", scrollY > 4);
   addEventListener("scroll", update, { passive: true });
   update();
+  // Its height, for the photo set bars that stick just below it
+  new ResizeObserver(() => {
+    document.documentElement.style.setProperty("--masthead-h", `${bar.offsetHeight}px`);
+  }).observe(bar);
 })();
 
 // Looping videos: show only the still frame to visitors who prefer reduced motion
