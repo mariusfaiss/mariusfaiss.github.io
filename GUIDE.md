@@ -134,12 +134,12 @@ Originals live in `~/Documents/Paperwork/Pics/website photos/`:
 
 ```
 website photos/
-  01 Masai Mara - Hyenas/       <- one folder per set
+  01 Maasai Mara - Hyenas/       <- one folder per set
     info.csv                    <- captions, camera, lens, film, order
-    about.txt                   <- optional: a line or two about the set
+    about.txt                   <- optional: a few sentences about the set; links as [text](https://...)
     20260829_OlympusOM2n_UltraMax400_MasaiMaraP1037805.RW2.jpg
     ...
-  02 Masai Mara - Landscape/
+  02 Maasai Mara - Landscape/
   Marius/                       <- portraits for the About section, not in the gallery
 ```
 
@@ -192,6 +192,9 @@ Add a line for a new camera or film (otherwise `PortraEktar` just becomes
 Make a new folder in `website photos`, e.g. `04 Black Forest`, put the photos in,
 optionally add `about.txt`, and run `photos.py`. The set gets its own stack on
 the photography page; the first photo in the order is the top of the stack.
+
+`about.txt` is a short note shown above the photos of the set. Write links as
+`[Mara Hyena Project](https://www.marahyenas.com)`.
 
 ### Remove photos
 

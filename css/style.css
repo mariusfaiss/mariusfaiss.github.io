@@ -146,6 +146,8 @@ section[id] { scroll-margin-top: var(--masthead-h); }
   text-transform: lowercase;
 }
 .masthead nav a { text-decoration: none; color: var(--ink-soft); }
+/* Divider before "photography": the links to its left are sections of the home page */
+.masthead nav .nav-sep { align-self: center; width: 1px; height: 0.95em; background: currentColor; opacity: 0.35; }
 .masthead nav a:hover,
 .masthead nav a[aria-current="page"] { color: var(--accent); }
 

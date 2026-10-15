@@ -1,5 +1,5 @@
 // Photography page: stacks overview, set view with sticky titles, and a lightbox.
-// The URL hash holds the open set (#masai-mara-hyenas), so the browser's back
+// The URL hash holds the open set (#maasai-mara-hyenas), so the browser's back
 // button and shared links work.
 (() => {
   const overview = document.getElementById("overview");
@@ -54,7 +54,12 @@
   }
 
   function route() {
-    const slug = decodeURIComponent(location.hash.slice(1));
+    let slug = decodeURIComponent(location.hash.slice(1));
+    // Links from before the sets were renamed to "Maasai"
+    if (slug.startsWith("masai-")) {
+      slug = "maasai-" + slug.slice(6);
+      history.replaceState(null, "", `#${slug}`);
+    }
     slug ? openSet(slug, false) : showOverview(null, false);
   }
 

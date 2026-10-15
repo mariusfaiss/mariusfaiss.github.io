@@ -5,7 +5,7 @@ Source layout (outside the repo, originals stay untouched):
 
     ~/Documents/Paperwork/Pics/website photos/
         01 Iceland 2024/          <- one folder per set; the number only sets the order
-            about.txt             <- optional: one or two sentences about the set
+            about.txt             <- optional: a few sentences about the set; links as [text](https://...)
             info.csv              <- created for you on first run, then fill it in
             scan001.jpg
             scan002.jpg
@@ -84,6 +84,7 @@ NAMES = {
     "UltraMax400": "Kodak UltraMax 400",
     "Ektacolor160": "Kodak Ektacolor 160",
     "Phoenix200II": "Harman Phoenix 200 II",
+    "MasaiMara": "Maasai Mara",
 }
 MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
 
@@ -101,11 +102,16 @@ def guess_from_filename(name):
         return {}
     year, month, camera, film, place = m.groups()
     return {
-        "caption": split_caps(place),
+        "caption": NAMES.get(place, split_caps(place)),
         "camera": NAMES.get(camera, split_caps(camera)),
         "film": NAMES.get(film, split_caps(film)),
         "date": f"{MONTHS[int(month) - 1]} {year}",
     }
+
+
+def with_links(text):
+    """[Mara Hyena Project](https://www.marahyenas.com) -> a link"""
+    return re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", r'<a href="\2">\1</a>', text)
 
 
 def order_key(row, index):
@@ -272,7 +278,7 @@ def build_set(set_dir):
     about = set_dir / "about.txt"
     about_text = about.read_text(encoding="utf-8").strip() if about.exists() else ""
     return {"slug": slug, "name": html.escape(display_name(set_dir.name)),
-            "about": html.escape(about_text), "prints": prints}
+            "about": with_links(html.escape(about_text)), "prints": prints}
 
 
 def stack_html(s):
