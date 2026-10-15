@@ -253,7 +253,7 @@ section[id] { scroll-margin-top: var(--masthead-h); }
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgba(30, 28, 25, 0.94);
+  background: #2b2825; /* solid, so iPhone Safari tints its bars to match */
   cursor: zoom-out;
   animation: lb-in 0.2s ease;
 }
@@ -630,7 +630,7 @@ a.cv-logo--text:hover { color: var(--accent); }
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation; /* quick taps through photos, no double-tap zoom */
   overscroll-behavior: contain;
-  background: rgba(30, 28, 25, 0.94);
+  background: #2b2825; /* solid, so iPhone Safari tints its bars to match */
   color: #e9e4da;
   animation: lb-in 0.2s ease;
 }
